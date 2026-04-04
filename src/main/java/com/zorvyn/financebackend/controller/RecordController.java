@@ -35,17 +35,15 @@ public class RecordController {
     // Admin only: create new record
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public String createRecord(@Valid @RequestBody Record record) {
-        recordService.createRecord(record);
-        return "Record created successfully";
+    public Record createRecord(@Valid @RequestBody Record record) {
+        return recordService.createRecord(record);
     }
 
     // Admin only: update record
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public String updateRecord(@PathVariable Long id, @Valid @RequestBody Record updatedRecord) {
-        recordService.updateRecord(id, updatedRecord);
-        return "Record " + id + " updated successfully";
+    public Record updateRecord(@PathVariable Long id, @Valid @RequestBody Record updatedRecord) {
+        return recordService.updateRecord(id, updatedRecord);
     }
 
     // Admin only: delete record

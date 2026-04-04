@@ -36,13 +36,21 @@ public class SummaryService {
         return getTotalIncome() - getTotalExpenses();
     }
 
-    // Category-wise totals
+    // Category-wise totals (all categories)
     public Map<String, Double> getCategoryTotals() {
         return recordRepository.findAll().stream()
                 .collect(Collectors.groupingBy(
                         Record::getCategory,
-                        Collectors.summingDouble(Record::getAmount)
+                        Collectors.summingDouble(r -> "income".equalsIgnoreCase(r.getType()) ? r.getAmount() : -r.getAmount())
                 ));
+    }
+
+    // Category total for a single category
+    public Double getCategoryTotal(String category) {
+        return recordRepository.findAll().stream()
+                .filter(r -> r.getCategory().equalsIgnoreCase(category))
+                .mapToDouble(r -> "income".equalsIgnoreCase(r.getType()) ? r.getAmount() : -r.getAmount())
+                .sum();
     }
 
     // Recent activity (last 5 records)
@@ -53,7 +61,7 @@ public class SummaryService {
                 .collect(Collectors.toList());
     }
 
-    // Monthly totals (income vs expense)
+    // Monthly totals (income vs expense grouped)
     public Map<String, Map<String, Double>> getMonthlyTotals() {
         return recordRepository.findAll().stream()
                 .collect(Collectors.groupingBy(
@@ -63,5 +71,13 @@ public class SummaryService {
                                 Collectors.summingDouble(Record::getAmount)
                         )
                 ));
+    }
+
+    // Monthly net total (income - expenses for given year/month)
+    public Double getMonthlyTotal(int year, int month) {
+        return recordRepository.findAll().stream()
+                .filter(r -> r.getDate().getYear() == year && r.getDate().getMonthValue() == month)
+                .mapToDouble(r -> "income".equalsIgnoreCase(r.getType()) ? r.getAmount() : -r.getAmount())
+                .sum();
     }
 }

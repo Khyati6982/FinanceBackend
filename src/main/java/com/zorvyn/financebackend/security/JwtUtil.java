@@ -2,19 +2,27 @@ package com.zorvyn.financebackend.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
+import java.util.Base64;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
 
-	@Value("${jwt.secret}")
-    private String secretKey;
+    @Value("${jwt.secret}")
+    private String secretKeyBase64;
 
     @Value("${jwt.expiration}")
     private long expirationTime;
+
+    // Decode Base64 secret into a proper HS256 key
+    private SecretKey getSecretKey() {
+        return Keys.hmacShaKeyFor(Base64.getDecoder().decode(secretKeyBase64));
+    }
 
     // Generate JWT token for a given username
     public String generateToken(String username) {
@@ -22,14 +30,15 @@ public class JwtUtil {
                 .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(getSecretKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
     // Extract username from token
     public String extractUsername(String token) {
-        return Jwts.parser()
-                .setSigningKey(secretKey)
+        return Jwts.parserBuilder()
+                .setSigningKey(getSecretKey())
+                .build()
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
@@ -42,8 +51,9 @@ public class JwtUtil {
 
     // Check if token is expired
     private boolean isTokenExpired(String token) {
-        Date expiration = Jwts.parser()
-                .setSigningKey(secretKey)
+        Date expiration = Jwts.parserBuilder()
+                .setSigningKey(getSecretKey())
+                .build()
                 .parseClaimsJws(token)
                 .getBody()
                 .getExpiration();

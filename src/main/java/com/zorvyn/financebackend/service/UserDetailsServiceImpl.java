@@ -26,14 +26,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
     }
 
-    // Register new user
-    public void registerUser(String username, String password) {
+    // Register new user and return the saved User
+    public User registerUser(String username, String password) {
         if (userRepository.findByUsername(username).isPresent()) {
             throw new DuplicateUsernameException("Username already exists");
         }
         User user = new User();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
-        userRepository.save(user);
+        user.setActive(true);
+        return userRepository.save(user);
     }
 }

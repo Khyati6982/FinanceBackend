@@ -98,56 +98,94 @@
 	</dependencies>
 
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>default-compile</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>compile</goal>
-						</goals>
-						<configuration>
-							<annotationProcessorPaths>
-								<path>
-									<groupId>org.projectlombok</groupId>
-									<artifactId>lombok</artifactId>
-								</path>
-							</annotationProcessorPaths>
-						</configuration>
-					</execution>
-					<execution>
-						<id>default-testCompile</id>
-						<phase>test-compile</phase>
-						<goals>
-							<goal>testCompile</goal>
-						</goals>
-						<configuration>
-							<annotationProcessorPaths>
-								<path>
-									<groupId>org.projectlombok</groupId>
-									<artifactId>lombok</artifactId>
-								</path>
-							</annotationProcessorPaths>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
+    	<plugins>
+        	<!-- Spring Boot plugin -->
+        	<plugin>
+            	<groupId>org.springframework.boot</groupId>
+            	<artifactId>spring-boot-maven-plugin</artifactId>
+            	<configuration>
+                	<excludes>
+                    	<exclude>
+                        	<groupId>org.projectlombok</groupId>
+                        	<artifactId>lombok</artifactId>
+                    	</exclude>
+                	</excludes>
+            	</configuration>
+        	</plugin>
+
+        	<!-- Compiler plugin -->
+        	<plugin>
+            	<groupId>org.apache.maven.plugins</groupId>
+            	<artifactId>maven-compiler-plugin</artifactId>
+            	<executions>
+                	<execution>
+                    	<id>default-compile</id>
+                    	<phase>compile</phase>
+                    	<goals>
+                        	<goal>compile</goal>
+                    	</goals>
+                    	<configuration>
+                        	<annotationProcessorPaths>
+                            	<path>
+                                	<groupId>org.projectlombok</groupId>
+                                	<artifactId>lombok</artifactId>
+                            	</path>
+                        	</annotationProcessorPaths>
+                    	</configuration>
+                	</execution>
+                	<execution>
+                    	<id>default-testCompile</id>
+                    	<phase>test-compile</phase>
+                    	<goals>
+                        	<goal>testCompile</goal>
+                    	</goals>
+                    	<configuration>
+                        	<annotationProcessorPaths>
+                            	<path>
+                                	<groupId>org.projectlombok</groupId>
+                                	<artifactId>lombok</artifactId>
+                            	</path>
+                        	</annotationProcessorPaths>
+                    	</configuration>
+                	</execution>
+            	</executions>
+        	</plugin>
+
+        	<!-- Surefire plugin to run tests twice -->
+        	<plugin>
+            	<groupId>org.apache.maven.plugins</groupId>
+            	<artifactId>maven-surefire-plugin</artifactId>
+            	<version>3.5.5</version>
+            	<executions>
+                	<!-- Run tests with H2 profile -->
+                	<execution>
+                    	<id>test-h2</id>
+                    	<phase>test</phase>
+                    	<goals>
+                        	<goal>test</goal>
+                    	</goals>
+                    	<configuration>
+                        	<systemPropertyVariables>
+                            	<spring.profiles.active>h2</spring.profiles.active>
+                        	</systemPropertyVariables>
+                    	</configuration>
+                	</execution>
+                	<!-- Run tests with MySQL profile -->
+                	<execution>
+                    	<id>test-mysql</id>
+                    	<phase>test</phase>
+                    	<goals>
+                        	<goal>test</goal>
+                    	</goals>
+                    	<configuration>
+                        	<systemPropertyVariables>
+                            	<spring.profiles.active>mysql</spring.profiles.active>
+                        	</systemPropertyVariables>
+                    	</configuration>
+                	</execution>
+            	</executions>
+        	</plugin>
+    	</plugins>
 	</build>
 
 </project>

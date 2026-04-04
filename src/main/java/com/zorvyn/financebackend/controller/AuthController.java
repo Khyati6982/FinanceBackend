@@ -1,5 +1,6 @@
 package com.zorvyn.financebackend.controller;
 
+import com.zorvyn.financebackend.model.User;
 import com.zorvyn.financebackend.security.JwtUtil;
 import com.zorvyn.financebackend.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import java.util.Map;
+
 
 @RestController
 @RequestMapping("/auth")
@@ -22,27 +27,29 @@ public class AuthController {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
-    // Login endpoint: validates credentials and returns JWT
+    // Login endpoint: validates credentials and returns JWT in JSON
     @PostMapping("/login")
-    public String login(@RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<Map<String, String>> login(@RequestBody User user) {
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(username, password)
+                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
             );
             if (authentication.isAuthenticated()) {
-                return jwtUtil.generateToken(username);
+                String token = jwtUtil.generateToken(user.getUsername());
+                return ResponseEntity.ok(Map.of("token", token));
             } else {
                 throw new BadCredentialsException("Invalid login attempt");
             }
         } catch (BadCredentialsException e) {
-            throw new BadCredentialsException("Invalid username or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                                 .body(Map.of("error", "Invalid username or password"));
         }
     }
 
-    // Register endpoint: saves user to DB
+    // Register endpoint: saves user and returns JSON
     @PostMapping("/register")
-    public String register(@RequestParam String username, @RequestParam String password) {
-        userDetailsService.registerUser(username, password);
-        return "User registered successfully";
+    public ResponseEntity<User> register(@RequestBody User user) {
+        User created = userDetailsService.registerUser(user.getUsername(), user.getPassword());
+        return ResponseEntity.ok(created);
     }
 }

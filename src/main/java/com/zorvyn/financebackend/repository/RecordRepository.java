@@ -9,9 +9,6 @@ import java.util.List;
 
 public interface RecordRepository extends JpaRepository<Record, Long> {
 
-    // Viewer: fetch records created by a specific user
-    List<Record> findByCreatedBy(String createdBy);
-
     // Analyst/Admin: filter records by type, category, and date
     @Query("SELECT r FROM Record r WHERE " +
             "(:type IS NULL OR r.type = :type) AND " +

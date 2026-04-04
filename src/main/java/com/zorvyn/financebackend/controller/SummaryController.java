@@ -16,44 +16,44 @@ public class SummaryController {
     @Autowired
     private SummaryService summaryService;
 
-    // Total income
+    // Admin/Analyst: income
     @GetMapping("/income")
-    @PreAuthorize("hasAnyRole('VIEWER','ANALYST','ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ANALYST')")
     public Double getTotalIncome() {
         return summaryService.getTotalIncome();
     }
 
-    // Total expenses
+    // Admin/Analyst: expenses
     @GetMapping("/expenses")
-    @PreAuthorize("hasAnyRole('VIEWER','ANALYST','ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ANALYST')")
     public Double getTotalExpenses() {
         return summaryService.getTotalExpenses();
     }
 
-    // Net balance
+    // Admin/Analyst: net balance
     @GetMapping("/netbalance")
-    @PreAuthorize("hasAnyRole('VIEWER','ANALYST','ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ANALYST')")
     public Double getNetBalance() {
         return summaryService.getNetBalance();
     }
 
-    // Category-wise totals
+    // Admin/Analyst: category totals
     @GetMapping("/categorytotals")
-    @PreAuthorize("hasAnyRole('VIEWER','ANALYST','ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ANALYST')")
     public Map<String, Double> getCategoryTotals() {
         return summaryService.getCategoryTotals();
     }
 
-    // Recent activity (last 5 records)
+    // Admin/Analyst/Viewer: recent activity (dashboard)
     @GetMapping("/recent")
-    @PreAuthorize("hasAnyRole('VIEWER','ANALYST','ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ANALYST','VIEWER')")
     public List<Record> getRecentActivity() {
         return summaryService.getRecentActivity();
     }
 
-    // Monthly totals (income vs expense)
+    // Admin/Analyst: monthly totals (income vs expense trends)
     @GetMapping("/monthly")
-    @PreAuthorize("hasAnyRole('VIEWER','ANALYST','ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ANALYST')")
     public Map<String, Map<String, Double>> getMonthlyTotals() {
         return summaryService.getMonthlyTotals();
     }
