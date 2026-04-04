@@ -4,6 +4,8 @@ import com.zorvyn.financebackend.model.User;
 import com.zorvyn.financebackend.model.Role;
 import com.zorvyn.financebackend.repository.UserRepository;
 import com.zorvyn.financebackend.repository.RoleRepository;
+import com.zorvyn.financebackend.exception.UserNotFoundException;
+import com.zorvyn.financebackend.exception.RoleNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +28,7 @@ public class UserService {
     // Get user by ID
     public User getUserById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
     // Create new user
@@ -37,7 +39,7 @@ public class UserService {
     // Update user
     public User updateUser(Long id, User updatedUser) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         user.setUsername(updatedUser.getUsername());
         user.setPassword(updatedUser.getPassword());
@@ -54,10 +56,10 @@ public class UserService {
     // Assign role to user
     public User assignRole(Long userId, String roleName) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         Role role = roleRepository.findByName(roleName)
-                .orElseThrow(() -> new RuntimeException("Role not found"));
+                .orElseThrow(() -> new RoleNotFoundException("Role not found"));
 
         user.getRoles().add(role);
         return userRepository.save(user);
@@ -66,7 +68,7 @@ public class UserService {
     // Update user status (active/inactive)
     public User updateUserStatus(Long id, boolean active) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         user.setActive(active);
         return userRepository.save(user);

@@ -4,9 +4,9 @@ import com.zorvyn.financebackend.security.JwtUtil;
 import com.zorvyn.financebackend.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -32,10 +32,10 @@ public class AuthController {
             if (authentication.isAuthenticated()) {
                 return jwtUtil.generateToken(username);
             } else {
-                throw new RuntimeException("Invalid login attempt");
+                throw new BadCredentialsException("Invalid login attempt");
             }
-        } catch (AuthenticationException e) {
-            throw new RuntimeException("Invalid username or password");
+        } catch (BadCredentialsException e) {
+            throw new BadCredentialsException("Invalid username or password");
         }
     }
 

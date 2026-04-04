@@ -2,6 +2,7 @@ package com.zorvyn.financebackend.controller;
 
 import com.zorvyn.financebackend.model.Record;
 import com.zorvyn.financebackend.service.RecordService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +35,7 @@ public class RecordController {
     // Admin only: create new record
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public String createRecord(@RequestBody Record record) {
+    public String createRecord(@Valid @RequestBody Record record) {
         recordService.createRecord(record);
         return "Record created successfully";
     }
@@ -42,7 +43,7 @@ public class RecordController {
     // Admin only: update record
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public String updateRecord(@PathVariable Long id, @RequestBody Record updatedRecord) {
+    public String updateRecord(@PathVariable Long id, @Valid @RequestBody Record updatedRecord) {
         recordService.updateRecord(id, updatedRecord);
         return "Record " + id + " updated successfully";
     }

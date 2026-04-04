@@ -2,6 +2,7 @@ package com.zorvyn.financebackend.controller;
 
 import com.zorvyn.financebackend.model.User;
 import com.zorvyn.financebackend.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -32,14 +33,14 @@ public class UserController {
     // Admin only: create new user
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public User createUser(@RequestBody User user) {
+    public User createUser(@Valid @RequestBody User user) {
         return userService.createUser(user);
     }
 
     // Admin only: update user info
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public User updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
+    public User updateUser(@PathVariable Long id, @Valid @RequestBody User updatedUser) {
         return userService.updateUser(id, updatedUser);
     }
 

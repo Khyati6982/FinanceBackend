@@ -2,6 +2,7 @@ package com.zorvyn.financebackend.service;
 
 import com.zorvyn.financebackend.model.Record;
 import com.zorvyn.financebackend.repository.RecordRepository;
+import com.zorvyn.financebackend.exception.RecordNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ public class RecordService {
     // Get record by ID
     public Record getRecordById(Long id) {
         return recordRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Record not found"));
+                .orElseThrow(() -> new RecordNotFoundException("Record not found"));
     }
 
     // Create new record
@@ -37,7 +38,7 @@ public class RecordService {
     // Update record
     public Record updateRecord(Long id, Record updatedRecord) {
         Record record = recordRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Record not found"));
+                .orElseThrow(() -> new RecordNotFoundException("Record not found"));
 
         record.setAmount(updatedRecord.getAmount());
         record.setType(updatedRecord.getType());
@@ -50,6 +51,9 @@ public class RecordService {
 
     // Delete record
     public void deleteRecord(Long id) {
-        recordRepository.deleteById(id);
+    	if (!recordRepository.existsById(id)) {
+    	    throw new RecordNotFoundException("Record not found");
+    	}
+    	recordRepository.deleteById(id);
     }
 }
