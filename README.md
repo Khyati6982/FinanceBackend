@@ -6,6 +6,20 @@ This project is a Spring Boot backend designed for a finance application. It dem
 
 ---
 
+## Tech Stack
+
+- **Java 17** – Core language
+- **Spring Boot** – Backend framework
+- **Spring Security (JWT)** – Authentication & authorization
+- **Hibernate / JPA** – ORM and persistence
+- **MySQL** – Runtime database
+- **H2** – In-memory test database
+- **JUnit 5** – Unit testing
+- **Swagger / OpenAPI** – API documentation
+- **Maven** – Build and dependency management
+
+---
+
 ## Profiles
 
 ### Dev / H2 (Tests)
@@ -24,7 +38,7 @@ This project is a Spring Boot backend designed for a finance application. It dem
 
 - Configured in ```application-mysql.properties```:
 ``` 
- spring.datasource.url=jdbc:mysql://localhost:**3306**/finance_db 
+ spring.datasource.url=jdbc:mysql://localhost:3306/finance_db 
  spring.datasource.username=${DB_USERNAME} 
  spring.datasource.password=${DB_PASSWORD}
  spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver 
@@ -57,7 +71,7 @@ This project is a Spring Boot backend designed for a finance application. It dem
 
 - Admins can assign roles dynamically using the endpoint:
 
-  ```**POST** /users/{id}/assignRole?roleName=**ANALYST**```
+  ```**POST** /users/{id}/assignRole?roleName=ANALYST```
 
 - This populates the ```user_roles``` table automatically.
 
@@ -99,19 +113,19 @@ This project is a Spring Boot backend designed for a finance application. It dem
 
 -- Roles 
 
-**INSERT** **INTO** **ROLES** (id, name) **VALUES** (1, '**VIEWER**'); **INSERT** **INTO** **ROLES** (id, name) **VALUES** (2, '**ANALYST**'); **INSERT** **INTO** **ROLES** (id, name) **VALUES** (3, '**ADMIN**');
+INSERT INTO ROLES (id, name) VALUES (1, 'VIEWER'); INSERT INTO ROLES (id, name) VALUES (2, 'ANALYST'); INSERT INTO ROLES (id, name) VALUES (3, 'ADMIN');
 
 -- Example user 
 
-**INSERT** **INTO** **USERS** (id, active, username, password) **VALUES** (14, **TRUE**, 'demoUser', 'password123');
+INSERT INTO USERS (id, active, username, password) VALUES (14, TRUE, 'demoUser', 'password123');
 
 -- Link user to role 
 
-**INSERT** **INTO** USER_ROLES (user_id, role_id) **VALUES** (14, 1);
+INSERT INTO*USER_ROLES (user_id, role_id) VALUES (14, 1);
 
 -- Financial record 
 
- **INSERT** **INTO** FINANCIAL_RECORDS (id, amount, category, date, notes, type) **VALUES** (22, **500**, 'salary', **CURDATE**(), 'Monthly salary', 'income');
+ INSERT INTO FINANCIAL_RECORDS (id, amount, category, date, notes, type) VALUES (22, 500, 'salary', CURDATE(), 'Monthly salary', 'income');
 
 ---
 
@@ -122,6 +136,13 @@ This project is a Spring Boot backend designed for a finance application. It dem
 - Endpoints are visible but secured.
 
 - Evaluators can authenticate with **JWT** to test functionality.
+
+---
+
+## Validation and Error Handling
+- Input validation for required fields
+- Meaningful error responses with proper HTTP status codes
+- Protection against unauthorized role actions
 
 ---
 
@@ -149,7 +170,7 @@ This project is a Spring Boot backend designed for a finance application. It dem
 
 - Run with MySQL profile for full runtime validation.
 
-- Access Swagger UI at [http://localhost:**9092**/swagger-ui.html.](http://localhost:**9092**/swagger-ui.html.)
+- Access Swagger UI at [http://localhost:9092/swagger-ui.html.](http://localhost:9092/swagger-ui.html.)
 
 ---
 
